@@ -1,0 +1,26 @@
+---
+description: "Code organization and implementation philosophy for building chips from simpler components"
+globs: ["**/*.R"]
+alwaysApply: true
+---
+
+# Code Organization and Implementation Philosophy
+
+## File Organization
+- Group related chips in the same file
+- Use section headers to separate different categories
+- Place more complex chips after simpler building blocks
+- Include explanatory comments about the implementation approach
+
+## Implementation Philosophy
+- Build complex chips from simpler building blocks
+- Use only the basic gates (nand, and, or, xor, not) and previously built chips
+- Comment on the logical arrangement and how signals flow through the system
+- Think in terms of electrical signals and gate arrangements
+- Each chip should be built using only previously defined chips and the base nand gate
+
+## Code Structure
+- Start with the simplest building blocks
+- Build up complexity gradually
+- Each function should have a clear, single purpose
+- Functions should be composable and reusable

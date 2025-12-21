@@ -1,5 +1,7 @@
-# MULTI-BIT (array) inputs, AKA buses
+# MULTI-BIT GATES (array) inputs, AKA buses
+# These operate on buses (arrays of bits) rather than single bits
 
+# 16-bit And gate
 # These are just a bunch of `and` gates packaged together, working independently.
 # Think of this as 16 `and` gates stacked on top of each other. On one side you
 # have 16 input pins all aligned vertically, which is referred to as the `a` bus.
@@ -15,7 +17,7 @@
 # |        a         |        b         |       out        |
 # | 0011110011000011 | 0000111111110000 | 0000110011000000 |
 
-# think of it like this (vertical stacking logic)
+# Think of it like this (vertical stacking logic)
 # |        a
 # | 0011110011000011
 # |        b
@@ -30,23 +32,27 @@
 # | 1111111111111111 | 1111111111111111 | 1111111111111111 |
 # | 1010101010101010 | 0101010101010101 | 0000000000000000 |
 # | 0001001000110100 | 1001100001110110 | 0001000000110100 |
-
 # HDL: And16.hdl
 and_16 <- function(bus_a = logical(16), bus_b = logical(16)) {
   sapply(1:16, function(x) and(bus_a[x], bus_b[x]))
 }
 
+# 16-bit Not gate
+# Negates each bit of the input bus
 # HDL: Not16.hdl
 not_16 <- function(bus_a = logical(16)) {
   sapply(1:16, function(x) not(bus_a[x]))
 }
 
+# 16-bit Or gate
+# Performs bitwise OR on corresponding bits of two buses
 # HDL: Or16.hdl
 or_16 <- function(bus_a = logical(16), bus_b = logical(16)) {
   sapply(1:16, function(x) or(bus_a[x], bus_b[x]))
 }
 
-# Multi-bit multiplexor examples:
+# 16-bit Multiplexor
+# Selects between two 16-bit buses based on selector bit
 # So for this, we're just imagining a bunch of multiplexors (16 of them). The
 # inputs for those multiplexors come from a[i], b[i] on the a and b buses, and
 # the selector comes from sel.
@@ -66,12 +72,14 @@ multiplex_16 <- function(bus_a = logical(16), bus_b = logical(16),
   sapply(1:16, function(x) multiplex(bus_a[x], bus_b[x], sel))
 }
 
-# WAYs
+# MULTI-WAY GATES
 # For ways, they're different from earlier gates in that multiple bits within
 # an array of bits act together to define some logic. For the or_8way below,
 # any can be true. For multiplexor_4way_16, we have the two selector bits create
 # 4 different "ways," i.e., four different options for which bus to forward along
 
+# 8-way Or gate
+# Outputs 1 if any of the 8 input bits is 1
 # HDL: Or8Way.hdl
 or_8way <- function(bus_a = logical(8)) {
   a <- or(bus_a[1], bus_a[2])
@@ -85,13 +93,13 @@ or_8way <- function(bus_a = logical(8)) {
   or(x, y)
 }
 
-# multiplexor, 16 bit, 4 way.
-# multiplexor, think "selector"
-# so all this is is allowing us to select 4 different options (as spec'd by the
-# 4 different sel combos), with each option referring to 16 bits (i.e., a bus).
-
-# Before our multiplexor selected a single input bit to forward along. now we're
-# asking it to forward an entire bus of independent (but chunked) bits.
+# 4-way 16-bit Multiplexor
+# Selects one of four 16-bit buses based on 2-bit selector
+# Multiplexor, think "selector" - so all this is is allowing us to select 4 different
+# options (as spec'd by the 4 different sel combos), with each option referring to
+# 16 bits (i.e., a bus). Before our multiplexor selected a single input bit to
+# forward along. Now we're asking it to forward an entire bus of independent
+# (but chunked) bits.
 # |        a         |        b         |        c         |        d         | sel  |       out        |
 # | 0001001000110100 | 1001100001110110 | 1010101010101010 | 0101010101010101 |  00  | 0001001000110100 |
 
@@ -103,9 +111,8 @@ or_8way <- function(bus_a = logical(8)) {
 # | 0001001000110100 | 1001100001110110 | 1010101010101010 | 0101010101010101 |  10  | 1010101010101010 |
 # | 0001001000110100 | 1001100001110110 | 1010101010101010 | 0101010101010101 |  11  | 0101010101010101 |
 
-# use one selector (say, sel_1) to choose between a/b, c/d. use another selector
+# Use one selector (say, sel_1) to choose between a/b, c/d. Use another selector
 # (sel_2) to choose between resulting outputs.
-
 # HDL: Mux4Way16.hdl
 multiplexor_4way_16 <- function(bus_a = logical(16), bus_b = logical(16),
                                 bus_c = logical(16), bus_d = logical(16),
@@ -115,8 +122,9 @@ multiplexor_4way_16 <- function(bus_a = logical(16), bus_b = logical(16),
   multiplex_16(a_or_b, c_or_d, sel[1])
 }
 
-### 000, 001, 010, 011
-### 100, 101, 110, 111
+# 8-way 16-bit Multiplexor
+# Selects one of eight 16-bit buses based on 3-bit selector
+# Selector combinations: 000, 001, 010, 011, 100, 101, 110, 111
 # HDL: Mux8Way16.hdl
 multiplexor_8way_16 <- function(bus_a = logical(16), bus_b = logical(16),
                                 bus_c = logical(16), bus_d = logical(16),
@@ -128,6 +136,8 @@ multiplexor_8way_16 <- function(bus_a = logical(16), bus_b = logical(16),
   multiplex_16(one, two, sel[1])
 }
 
+# 4-way Demultiplexor
+# Routes a single input to one of four outputs based on 2-bit selector
 # 4 different options for selector (2 bits), corresponding to whether in_ should
 # be forwarded to each of the 4 different possible outputs
 # HDL: DMux4Way.hdl
@@ -140,7 +150,8 @@ dmultiplex_4way <- function(in_, sel = logical(2)) {
   )
 }
 
-# Now with 8 different output pin options
+# 8-way Demultiplexor
+# Routes a single input to one of eight outputs based on 3-bit selector
 # HDL: DMux8Way.hdl
 dmultiplex_8way <- function(in_, sel = logical(3)) {
   x <- dmultiplex_4way(in_, sel[2:3])

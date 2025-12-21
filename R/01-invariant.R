@@ -1,3 +1,4 @@
+# BASE GATE
 # This is what we assume is possible to physically implement with some black
 # box (i.e., using hardware and laws of physics).
 # Two input pins, one output pin

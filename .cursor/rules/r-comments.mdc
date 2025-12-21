@@ -1,0 +1,34 @@
+---
+description: "Comment style guidelines for R code - section headers, HDL references, and documentation patterns"
+globs: ["**/*.R"]
+alwaysApply: true
+---
+
+# Comment Style Guidelines
+
+## Section Headers
+- Use descriptive comments with `#` followed by the section name
+- Examples:
+  - `# MULTI-BIT GATES (array) inputs, AKA buses`
+  - `# ---- Intro ----`
+  - `# ARITHMETIC CHIPS`
+  - `# BASIC GATES`
+
+## HDL References
+- Before each function, include an HDL reference comment
+- Format: `# HDL: ChipName.hdl`
+- Example: `# HDL: HalfAdder.hdl`
+- Place HDL comment immediately before the function definition
+
+## Function Documentation
+- Include descriptive comments explaining:
+  - What the chip does
+  - Input/output specifications
+  - Implementation approach or logic
+- Use inline comments to explain complex logic steps
+- Include truth tables or examples in comments when helpful
+
+## Examples in Comments
+- Include example truth tables or bit patterns in comments when they help clarify behavior
+- Use markdown-style tables in comments for readability
+- Show example inputs/outputs when the logic is non-obvious

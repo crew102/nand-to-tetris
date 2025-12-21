@@ -1,31 +1,35 @@
-# ---- Intro ----
-# Reminder what I'm doing below. I'm assuming I can use as many
-# physical chips that behave like nand in the invariant.R file. I'm also assuming
-# that I get electricity into some input pins (a, a and b, a, b, sel, etc.). I
-# want to arrange the nand gates such that I can logically think about how electricity
-# would move through the system if it was turned on for the input pins. I
-# use arrangements of nand gates as building blocks to create more chips.
-# Everything is just a combination of input electricity and nand gates.
+# BASIC GATES
+# Built from the nand gate. I'm assuming I can use as many physical chips that
+# behave like nand in the invariant.R file. I'm also assuming that I get electricity
+# into some input pins (a, a and b, a, b, sel, etc.). I want to arrange the nand
+# gates such that I can logically think about how electricity would move through
+# the system if it was turned on for the input pins. I use arrangements of nand
+# gates as building blocks to create more chips. Everything is just a combination
+# of input electricity and nand gates.
 
+# Not gate
+# Outputs the logical negation of the input
 # HDL: Not.hdl
 not <- function(a = logical(1)) {
   nand(a, a)
 }
 
+# And gate
+# Outputs 1 only when both inputs are 1
 # HDL: And.hdl
 and <- function(a = logical(1), b = logical(1)) {
   not(nand(a, b))
 }
 
-# ! F F
+# Or gate
+# Outputs 1 when at least one input is 1
 # HDL: Or.hdl
 or <- function(a = logical(1), b = logical(1)) {
   not(and(not(a), not(b)))
 }
 
-# xor is T when values are opposite, F otherwise
-# TT or FF -> F
-# So let's `not` the arrangement created above for either case (both being the same)
+# Xor gate
+# Exclusive OR: outputs 1 when inputs are different, 0 when they're the same.
 # HDL: Xor.hdl
 xor <- function(a = logical(1), b = logical(1)) {
   both_ts <- and(a, b)
@@ -34,9 +38,11 @@ xor <- function(a = logical(1), b = logical(1)) {
   not(ts_or_fs)
 }
 
+# Multiplexor
+# Selects between two inputs based on selector bit
 # When sel is F, provide a's value. When sel is T, provide b's value.
-# Think about it this way, how can we make sure we generate a T in the 
-# arrangements we need to (indicated by XXXX below) without leaking T's into 
+# Think about it this way, how can we make sure we generate a T in the
+# arrangements we need to (indicated by XXXX below) without leaking T's into
 # arrangements that should be F.
 
 # | s | a | b |   Y |
@@ -56,18 +62,15 @@ multiplex <- function(a = logical(1), b = logical(1), sel = logical(1)) {
   or(a_on, b_on)
 }
 
-# Here we just forward the `a` value to one of two possible output bits, depending
-# on value of selector.
-
+# Demultiplexor
+# Routes a single input to one of two outputs based on selector bit
 # This is the first chip we return a vector of bits instead of a single bit.
-
-# `sel` chooses which of your output pins could possibly be turned on. so
-# don't think of it as "sel is off, therefore no outs can be on." instead, sel
+# `sel` chooses which of your output pins could possibly be turned on. So
+# don't think of it as "sel is off, therefore no outs can be on." Instead, sel
 # is choosing which output bit to channel the `in` value to, either out1
 # (sel = 0) or out2 (sel = 1).
 
 # Think through how either one of the output bits could be T
-
 # out1 could be True only if sel is 0 and in is 1
 # out2 could be T only if sel is 1 and in is 1
 
@@ -77,7 +80,6 @@ multiplex <- function(a = logical(1), b = logical(1), sel = logical(1)) {
 #   | 0 | 1 |  1 |  0 |....  sel is 0 and in (aka a) is 1
 #   | 1 | 0 |  0 |  0 |....  sel is 1 but doesn't correspond to input (which selects out2)
 #   | 1 | 1 |  0 |  1 |....  sel is 1 and in is 1
-
 # HDL: DMux.hdl
 dmultiplex <- function(in_ = logical(1), sel = logical(1)) {
   c(

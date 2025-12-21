@@ -1,0 +1,41 @@
+---
+description: "R code style guidelines for Nand to Tetris package - indentation, naming conventions, and function documentation patterns"
+globs: ["**/*.R"]
+alwaysApply: true
+---
+
+# R Code Style Guidelines for Nand to Tetris Package
+
+## Indentation
+- Use 2 spaces for indentation (not 4)
+- Function bodies should be indented with 2 spaces
+
+## Naming Conventions
+- Function names use snake_case (e.g., `half_adder`, `add_16`, `not_16`)
+- Chip functions: snake_case matching the HDL chip name (e.g., `half_adder` for `HalfAdder.hdl`)
+- Multi-bit variants: suffix with `_16`, `_8`, etc. (e.g., `and_16`, `not_16`)
+- Multi-way variants: suffix with `_4way`, `_8way` (e.g., `multiplexor_4way_16`)
+- Demultiplexers: prefix with `d` (e.g., `dmultiplex`, `dmultiplex_4way`)
+
+## Function Parameters
+- Function parameters use default values with `logical(n)` where n is the bit width
+- Single-bit functions: `logical(1)`
+- Multi-bit functions: `logical(16)` for 16-bit buses, `logical(8)` for 8-bit, etc.
+
+## Function Documentation Pattern
+```r
+# Chip Name
+# Brief description of what it does
+# Additional details about inputs/outputs
+# HDL: ChipName.hdl
+function_name <- function(param1 = logical(n), param2 = logical(m)) {
+  # Inline comment explaining step
+  result <- some_operation(param1, param2)
+  result
+}
+```
+
+## Multi-Output Functions
+- Functions that return multiple values should return a named list
+- Example: `list(sum = sum, carry = carry)` or `list(out = out, zr = zr, ng = ng)`
+- Use descriptive names for list elements

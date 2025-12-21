@@ -4,7 +4,6 @@
 .Ruserdata
 .idea
 projects/
-tests/cmp-files/
 dev
 .pytest_cache
 __pycache__

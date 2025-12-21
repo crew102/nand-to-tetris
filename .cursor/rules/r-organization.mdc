@@ -19,6 +19,14 @@ alwaysApply: true
 - Think in terms of electrical signals and gate arrangements
 - Each chip should be built using only previously defined chips and the base nand gate
 
+## No Control Flow Structures
+- **NEVER use R control flow features** like `if/else`, `for`, `while`, `repeat`, or `ifelse()`
+- All conditional logic must be implemented using multiplexers (e.g., `multiplex_16()`)
+- All repetitive operations must be explicitly wired (e.g., chain 16 full adders, not a loop)
+- Avoid R built-in functions that hide logic (e.g., use `or_8way()` + `not()` instead of `!any()`)
+- Only use `c()` and `list()` to combine and structure chip inputs/outputs
+- Think: "How would this be wired in hardware?" - hardware has no loops or conditionals
+
 ## Code Structure
 - Start with the simplest building blocks
 - Build up complexity gradually

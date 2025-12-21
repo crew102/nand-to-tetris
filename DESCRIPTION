@@ -1,0 +1,26 @@
+Package: nandtotetris
+Type: Package
+Title: Nand to Tetris
+Version: 0.0.0.9000
+Authors@R: c(
+      person("Christopher", "Baker", email = "chriscrewbaker@gmail.com", 
+        role = c("aut", "cre"))
+    )
+Encoding: UTF-8
+Description: A computer simulated in R and Python
+License: MIT
+LazyData: TRUE
+Depends:
+    R (>= 3.1)
+Imports:
+  dplyr,
+  hippie,
+  styler,
+  stringr,
+  here
+Suggests:
+  testthat
+Remotes:
+  crew102/hippie@feature/style-forward-assignment
+RoxygenNote: 7.3.2
+Roxygen: list(markdown = TRUE)

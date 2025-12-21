@@ -57,6 +57,7 @@ test_that("add_16 works", {
   # Test with comparison file
   cmp_file <- read_cmp_file(here("tests/cmp-files/02/Add16.cmp"))
   run_test <- function(cmp_file) {
+    cmp_file <- pick(everything())
     bs <- sapply(cmp_file, str_to_bool, USE.NAMES = TRUE, simplify = FALSE)
     output <- add_16(bs$a, bs$b)
     expected <- bs$out
@@ -90,6 +91,7 @@ test_that("inc_16 works", {
   # Test with comparison file
   cmp_file <- read_cmp_file(here("tests/cmp-files/02/Inc16.cmp"))
   run_test <- function(cmp_file) {
+    cmp_file <- pick(everything())
     bs <- sapply(cmp_file, str_to_bool, USE.NAMES = TRUE, simplify = FALSE)
     output <- inc_16(bs$in.)
     expected <- bs$out
@@ -114,6 +116,7 @@ test_that("alu works with basic tests", {
   # Test with ALU-basic.cmp (note: this file doesn't have zr/ng columns)
   cmp_file <- read_cmp_file(here("tests/cmp-files/02/ALU-basic.cmp"))
   run_test <- function(cmp_file) {
+    cmp_file <- pick(everything())
     bs <- sapply(cmp_file, str_to_bool, USE.NAMES = TRUE, simplify = FALSE)
     result <- alu(
       bs$x, bs$y,
@@ -133,6 +136,7 @@ test_that("alu works with full tests", {
   # Test with ALU.cmp (more comprehensive)
   cmp_file <- read_cmp_file(here("tests/cmp-files/02/ALU.cmp"))
   run_test <- function(cmp_file) {
+    cmp_file <- pick(everything())
     bs <- sapply(cmp_file, str_to_bool, USE.NAMES = TRUE, simplify = FALSE)
     result <- alu(
       bs$x, bs$y,
@@ -148,4 +152,3 @@ test_that("alu works with full tests", {
     mutate(test_pass = run_test(.))
   expect_true(all(tests$test_pass))
 })
-

@@ -1,0 +1,29 @@
+{
+  // R Language Settings
+  "[r]": {
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true,
+    "editor.formatOnSave": false,
+    "editor.autoIndent": "full"
+  },
+
+  // R LSP (Language Server Protocol) Settings
+  "r.lsp.enabled": true,
+  "r.bracketedPaste": true,
+
+  // Disable auto-formatting for R files to prevent reverting indentation
+  "editor.formatOnSave": false,
+  "editor.formatOnPaste": false,
+  "editor.formatOnType": false,
+
+  // General editor settings
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "editor.detectIndentation": false,
+
+  // Files settings
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "files.eol": "\n"
+}
+

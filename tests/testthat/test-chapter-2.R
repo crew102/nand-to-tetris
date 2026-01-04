@@ -152,3 +152,76 @@ test_that("alu works with full tests", {
     mutate(test_pass = run_test(.))
   expect_true(all(tests$test_pass))
 })
+
+# ADDITIONAL PROPERTY-BASED TESTS
+################################################################################
+
+test_that("half_adder sum and carry are mutually exclusive", {
+  expect_all_true({
+    a <- rand_bool(1)
+    b <- rand_bool(1)
+    result <- half_adder(a, b)
+    # Sum and carry cannot both be true
+    !(result$sum && result$carry)
+  })
+})
+
+test_that("full_adder handles all carry scenarios", {
+  # Test that full adder correctly handles carry propagation
+  expect_all_true({
+    a <- rand_bool(1)
+    b <- rand_bool(1)
+    c <- rand_bool(1)
+    result <- full_adder(a, b, c)
+    # Verify sum is correct: a XOR b XOR c
+    expected_sum <- xor(xor(a, b), c)
+    result$sum == expected_sum
+  })
+})
+
+test_that("add_16 handles overflow correctly", {
+  # Test adding maximum values
+  max_val <- rep(TRUE, 16)
+  one <- c(rep(FALSE, 15), TRUE)
+  result <- add_16(max_val, one)
+  # Should wrap around to all zeros (overflow)
+  expected <- rep(FALSE, 16)
+  expect_equal(result, expected)
+})
+
+test_that("add_16 is associative", {
+  expect_all_true({
+    a <- rand_bool(16)
+    b <- rand_bool(16)
+    c <- rand_bool(16)
+    # (a + b) + c should equal a + (b + c) for addition
+    ab <- add_16(a, b)
+    ab_c <- add_16(ab, c)
+    bc <- add_16(b, c)
+    a_bc <- add_16(a, bc)
+    identical(ab_c, a_bc)
+  })
+})
+
+test_that("inc_16 increments by exactly one", {
+  expect_all_true({
+    bus_in <- rand_bool(16)
+    output <- inc_16(bus_in)
+    # Verify it's exactly one more (modulo 2^16)
+    one <- c(rep(FALSE, 15), TRUE)
+    expected <- add_16(bus_in, one)
+    identical(output, expected)
+  })
+})
+
+test_that("inc_16 of zero gives one", {
+  zeros <- rep(FALSE, 16)
+  one <- c(rep(FALSE, 15), TRUE)
+  expect_equal(inc_16(zeros), one)
+})
+
+test_that("inc_16 of max value wraps to zero", {
+  max_val <- rep(TRUE, 16)
+  zeros <- rep(FALSE, 16)
+  expect_equal(inc_16(max_val), zeros)
+})

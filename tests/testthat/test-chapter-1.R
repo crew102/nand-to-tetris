@@ -261,3 +261,136 @@ test_that("dmultiplex_8way works", {
     mutate(test_pass = run_test())
   expect_true(all(tests$test_pass))
 })
+
+# ADDITIONAL PROPERTY-BASED TESTS
+################################################################################
+
+test_that("nand is commutative", {
+  expect_all_true({
+    a <- rand_bool(1)
+    b <- rand_bool(1)
+    nand(a, b) == nand(b, a)
+  })
+})
+
+test_that("nand with same input gives not", {
+  expect_all_true({
+    a <- rand_bool(1)
+    nand(a, a) == not(a)
+  })
+})
+
+test_that("and is commutative", {
+  expect_all_true({
+    a <- rand_bool(1)
+    b <- rand_bool(1)
+    and(a, b) == and(b, a)
+  })
+})
+
+test_that("or is commutative", {
+  expect_all_true({
+    a <- rand_bool(1)
+    b <- rand_bool(1)
+    or(a, b) == or(b, a)
+  })
+})
+
+test_that("xor is commutative", {
+  expect_all_true({
+    a <- rand_bool(1)
+    b <- rand_bool(1)
+    xor(a, b) == xor(b, a)
+  })
+})
+
+test_that("xor with same input gives false", {
+  expect_all_true({
+    a <- rand_bool(1)
+    xor(a, a) == FALSE
+  })
+})
+
+test_that("multiplex with sel=0 returns first input", {
+  expect_all_true({
+    a <- rand_bool(1)
+    b <- rand_bool(1)
+    multiplex(a, b, FALSE) == a
+  })
+})
+
+test_that("multiplex with sel=1 returns second input", {
+  expect_all_true({
+    a <- rand_bool(1)
+    b <- rand_bool(1)
+    multiplex(a, b, TRUE) == b
+  })
+})
+
+test_that("dmultiplex with in=0 gives all zeros", {
+  expect_all_true({
+    sel <- rand_bool(1)
+    result <- dmultiplex(FALSE, sel)
+    identical(result, c(FALSE, FALSE))
+  })
+})
+
+test_that("and_16 with all zeros gives all zeros", {
+  zeros <- rep(FALSE, 16)
+  ones <- rep(TRUE, 16)
+  expect_equal(and_16(zeros, zeros), zeros)
+  expect_equal(and_16(zeros, ones), zeros)
+  expect_equal(and_16(ones, zeros), zeros)
+})
+
+test_that("and_16 with all ones gives all ones", {
+  ones <- rep(TRUE, 16)
+  expect_equal(and_16(ones, ones), ones)
+})
+
+test_that("or_16 with all zeros gives all zeros", {
+  zeros <- rep(FALSE, 16)
+  expect_equal(or_16(zeros, zeros), zeros)
+})
+
+test_that("or_16 with all ones gives all ones", {
+  ones <- rep(TRUE, 16)
+  zeros <- rep(FALSE, 16)
+  expect_equal(or_16(ones, zeros), ones)
+  expect_equal(or_16(zeros, ones), ones)
+  expect_equal(or_16(ones, ones), ones)
+})
+
+test_that("not_16 double negation is identity", {
+  expect_all_true({
+    bus <- rand_bool(16)
+    identical(not_16(not_16(bus)), bus)
+  })
+})
+
+test_that("multiplex_16 is idempotent with same inputs", {
+  expect_all_true({
+    bus <- rand_bool(16)
+    sel <- rand_bool(1)
+    result1 <- multiplex_16(bus, bus, sel)
+    identical(result1, bus)
+  })
+})
+
+test_that("or_8way with all zeros gives false", {
+  zeros <- rep(FALSE, 8)
+  expect_false(or_8way(zeros))
+})
+
+test_that("or_8way with any one gives true", {
+  for (i in 1:8) {
+    bus <- rep(FALSE, 8)
+    bus[i] <- TRUE
+    expect_true(or_8way(bus))
+  }
+})
+
+test_that("or_8way with all ones gives true", {
+  ones <- rep(TRUE, 8)
+  expect_true(or_8way(ones))
+})
